@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "0.2.0"
+  version: "0.4.0"
 
 package:
   name: editdistpy
@@ -9,10 +9,10 @@ package:
 
 source:
   url: https://pypi.org/packages/source/e/editdistpy/editdistpy-${{ version }}.tar.gz
-  sha256: 6cd95c61687a2681b11e28c914a90c2d73a771dea3d38473dc94cc8c64563ed1
+  sha256: bc64c0d0c4fe23a09e4b02693c5591a01d2ede7001bc55fcf92c117f68cd0896
 
 build:
-  number: 1
+  number: 0
   script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
