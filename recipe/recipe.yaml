@@ -34,6 +34,14 @@ tests:
       imports:
         - editdistpy
       pip_check: true
+  - files:
+      source:
+        - tests/
+    requirements:
+      run:
+        - pytest
+    script:
+      - pytest
 
 about:
   summary: Fast Levenshtein and Damerau optimal string alignment algorithms.
