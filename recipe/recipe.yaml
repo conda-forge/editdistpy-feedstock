@@ -13,18 +13,19 @@ source:
 
 build:
   number: 0
-  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  script:
+    - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+    - cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
 
 requirements:
   build:
-    - ${{ compiler('cxx') }}
+    - ${{ compiler('rust') }}
     - ${{ stdlib('c') }}
+    - cargo-bundle-licenses
   host:
     - python
+    - maturin >=1.13,<2
     - pip
-    - setuptools >=82.0.0
-    - cython >=3.2.4
-    - packaging >=26.0
   run:
     - python
 
@@ -32,8 +33,6 @@ tests:
   - python:
       imports:
         - editdistpy
-        - editdistpy.levenshtein
-        - editdistpy.damerau_osa
       pip_check: true
 
 about:
@@ -41,9 +40,11 @@ about:
   description: |
     editdistpy is a fast implementation of the Levenshtein and Damerau
     optimal string alignment (OSA) edit distance algorithms, written as a
-    Cython/C++ extension. It is used by symspellpy for spelling correction.
+    Rust extension. It is used by symspellpy for spelling correction.
   license: MIT
-  license_file: LICENSE
+  license_file:
+    - LICENSE
+    - THIRDPARTY.yml
   homepage: https://github.com/mammothb/editdistpy
   repository: https://github.com/mammothb/editdistpy
 
