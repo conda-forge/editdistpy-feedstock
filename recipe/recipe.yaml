@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "0.2.0"
+  version: "0.4.0"
 
 package:
   name: editdistpy
@@ -9,22 +9,23 @@ package:
 
 source:
   url: https://pypi.org/packages/source/e/editdistpy/editdistpy-${{ version }}.tar.gz
-  sha256: 6cd95c61687a2681b11e28c914a90c2d73a771dea3d38473dc94cc8c64563ed1
+  sha256: bc64c0d0c4fe23a09e4b02693c5591a01d2ede7001bc55fcf92c117f68cd0896
 
 build:
-  number: 1
-  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+  script:
+    - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+    - cargo-bundle-licenses --format yaml --output THIRDPARTY.yml
 
 requirements:
   build:
-    - ${{ compiler('cxx') }}
+    - ${{ compiler('rust') }}
     - ${{ stdlib('c') }}
+    - cargo-bundle-licenses
   host:
     - python
+    - maturin >=1.13,<2
     - pip
-    - setuptools >=82.0.0
-    - cython >=3.2.4
-    - packaging >=26.0
   run:
     - python
 
@@ -32,21 +33,30 @@ tests:
   - python:
       imports:
         - editdistpy
-        - editdistpy.levenshtein
-        - editdistpy.damerau_osa
       pip_check: true
+  - files:
+      source:
+        - tests/
+    requirements:
+      run:
+        - pytest
+    script:
+      - pytest
 
 about:
   summary: Fast Levenshtein and Damerau optimal string alignment algorithms.
   description: |
     editdistpy is a fast implementation of the Levenshtein and Damerau
     optimal string alignment (OSA) edit distance algorithms, written as a
-    Cython/C++ extension. It is used by symspellpy for spelling correction.
+    Rust extension. It is used by symspellpy for spelling correction.
   license: MIT
-  license_file: LICENSE
+  license_file:
+    - LICENSE
+    - THIRDPARTY.yml
   homepage: https://github.com/mammothb/editdistpy
   repository: https://github.com/mammothb/editdistpy
 
 extra:
   recipe-maintainers:
     - jm-rivera
+    - mgorny
